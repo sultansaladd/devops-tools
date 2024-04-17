@@ -1,11 +1,12 @@
-# app.py
-from flask import Flask
+FROM python:latest
 
-app = Flask(__name__)
+WORKDIR /app
 
-@app.route("/")
-def hello_world():
-    return "Hello from my Python web app!"
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+COPY . .
+
+EXPOSE 5000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
