@@ -10,7 +10,7 @@ pipeline {
         stage('Execute Ansible Playbook') {
             steps {
                 // Execute Ansible playbook with the selected environment
-                sh 'ansible-playbook playbook/nginx-playbook.yml -i inventory/dev.yaml'
+                sh 'ansible-playbook ansible/playbook/nginx-playbook.yml -i inventory/dev.yaml'
             }
         }
     }
