@@ -1,6 +1,7 @@
 [ec2-hosts]
 ubuntu@3.0.55.142 ansible_connection=ssh ansible_ssh_private_key_file=/var/lib/jenkins/jkt-devops.pem
 ubuntu@47.129.0.49 ansible_connection=ssh ansible_ssh_private_key_file=/var/lib/jenkins/jkt-devops.pem
+ubuntu@54.179.103.89 ansible_connection=ssh ansible_ssh_private_key_file=/var/lib/jenkins/jkt-devops.pem
 # ubuntu@10.0.102.50 ansible_connection=ssh ansible_ssh_private_key_file=/var/lib/jenkins/jkt-devops.pem
 # ubuntu@10.0.2.201 ansible_connection=ssh ansible_ssh_private_key_file=/var/lib/jenkins/jkt-devops.pem
 # ubuntu@10.0.101.172 ansible_connection=ssh ansible_ssh_private_key_file=/var/lib/jenkins/jkt-devops.pem
