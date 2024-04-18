@@ -17,7 +17,7 @@ pipeline {
         stage('Execute Ansible Playbook') {
             steps {
                 // Execute Ansible playbook with the selected environment
-                sh 'ansible-playbook playbook.yml -e "environment=${params.ENVIRONMENT}"'
+                sh 'ansible-playbook python-playbook.yml -e "environment=${params.ENVIRONMENT}"'
             }
         }
     }
