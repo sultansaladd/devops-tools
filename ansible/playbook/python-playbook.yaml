@@ -1,81 +1,105 @@
-# # tasks.yml (example for local development)
-# - name: Install Python and virtualenv
-#   hosts: localhost
-#   become: true
-#   tasks:
-#     - name: Install Python using package manager (adjust based on your OS)
-#       apt:
-#         name: python3
-#         state: present
-#     - name: Install virtualenv
-#       pip:
-#         name: virtualenv
-#         state: present
+# # # tasks.yml (example for local development)
+# # - name: Install Python and virtualenv
+# #   hosts: localhost
+# #   become: true
+# #   tasks:
+# #     - name: Install Python using package manager (adjust based on your OS)
+# #       apt:
+# #         name: python3
+# #         state: present
+# #     - name: Install virtualenv
+# #       pip:
+# #         name: virtualenv
+# #         state: present
 
-# - name: Create virtual environment for app
-#   hosts: localhost
-#   tasks:
-#     - name: Create virtual environment
-#       command: virtualenv venv
+# # - name: Create virtual environment for app
+# #   hosts: localhost
+# #   tasks:
+# #     - name: Create virtual environment
+# #       command: virtualenv venv
+
+# # ---
+# # - name: Deploy Flask App to ECS Environments
+# #   hosts: localhost
+# #   become: yes
+# #   gather_facts: no
+
+# #   tasks:
+# #     - name: Install Docker
+# #       yum:
+# #         name: docker
+# #         state: present
+
+# #     - name: Start Docker service
+# #       service:
+# #         name: docker
+# #         state: started
+
+# #     - name: Install Docker Compose
+# #       pip:
+# #         name: docker-compose
+# #         executable: pip3
+
+# #     - name: Copy Docker Compose file
+# #       copy:
+# #         src: files/docker-compose.yml
+# #         dest: /opt/flask_app/docker-compose.yml
+
+# #     - name: Ensure Docker Compose directory exists
+# #       file:
+# #         path: /opt/flask_app
+# #         state: directory
+
+# #     - name: Pull Docker images and start containers
+# #       command: docker-compose up -d
+# #       args:
+# #         chdir: /opt/flask_app
 
 # ---
-# - name: Deploy Flask App to ECS Environments
+# - name: Build and deploy Flask app to specified environment
 #   hosts: localhost
-#   become: yes
 #   gather_facts: no
 
 #   tasks:
-#     - name: Install Docker
-#       yum:
-#         name: docker
-#         state: present
+#     - name: Build Docker image (if requested)
+#       dockerfile:
+#         path: ./app  # Path to your Flask app directory
+#         buildstate: present
+#         tags: "{{ app_name }}-{{ environment }}"
+  
+#     # - name: Build Docker images for the specified environment
+#     #   docker_image:
+#     #     build:
+#     #       path: .
+#     #       pull: yes
+#     #       dockerfile: Dockerfile
+#     #       args:
+#     #         ENVIRONMENT: "{{ environment }}"
+#     #     name: python-app:{{ environment }}
+#     #     tag: latest
 
-#     - name: Start Docker service
-#       service:
-#         name: docker
+#     - name: Run Docker container for the specified environment
+#       docker_container:
+#         name: python_app_{{ environment }}
+#         image: python-app:{{ environment }}
 #         state: started
+#         ports:
+#           - "5000:5000"
 
-#     - name: Install Docker Compose
-#       pip:
-#         name: docker-compose
-#         executable: pip3
-
-#     - name: Copy Docker Compose file
-#       copy:
-#         src: files/docker-compose.yml
-#         dest: /opt/flask_app/docker-compose.yml
-
-#     - name: Ensure Docker Compose directory exists
-#       file:
-#         path: /opt/flask_app
-#         state: directory
-
-#     - name: Pull Docker images and start containers
-#       command: docker-compose up -d
-#       args:
-#         chdir: /opt/flask_app
+#   vars:
+#     app_name: "python-app"
 
 ---
-- name: Build and deploy Flask app to specified environment
-  hosts: localhost
-  gather_facts: no
-
+- name: Build and deploy Flask app
+  hosts: "{{ target_env }}"  # Target group based on environment
+  become: true
   tasks:
-    - name: Build Docker images for the specified environment
-      docker_image:
-        build:
-          path: .
-          pull: yes
-          dockerfile: Dockerfile
-          args:
-            ENVIRONMENT: "{{ environment }}"
-        name: python-app:{{ environment }}
-        tag: latest
+  - name: Build Docker image (if requested)
+    dockerfile:
+      path: ./python-app  # Path to your Flask app directory
+      buildstate: present
+      tags: "{{ app_name }}-{{ target_env }}"  # Tag with environment
 
-    - name: Run Docker container for the specified environment
-      docker_container:
-        name: python_app_{{ environment }}
-        image: python-app:{{ environment }}
-        state: started
-        ports:
-          - "5000:5000"
+  vars:
+    app_name: "my_flask_app"  # Replace with your app name
+    target_env: "{{ inventory_hostname }}"  # Use current inventory hostname as env
