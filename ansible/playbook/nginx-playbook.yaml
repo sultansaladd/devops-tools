@@ -1,6 +1,6 @@
 ---
 - name: Setup Nginx
-  hosts: localhost
+  hosts: ec2-hosts
   become: true  # Requires root privileges
 
   tasks:
