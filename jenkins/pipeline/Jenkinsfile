@@ -7,12 +7,12 @@ pipeline {
                 git branch: 'main', credentialsId: 'repo_access', url: 'https://github.com/sultansaladd/devops-tools.git'
             }
         }
-        stage('Build Docker Images') {
-            steps {
-                // Execute Docker build command with the selected environment as build argument
-                sh "docker build -t python-app:${params.ENVIRONMENT} --build-arg ENVIRONMENT=${params.ENVIRONMENT} ./python-app/"
-            }
-        }
+        // stage('Build Docker Images') {
+        //     steps {
+        //         // Execute Docker build command with the selected environment as build argument
+        //         sh "docker build -t python-app:${params.ENVIRONMENT} --build-arg ENVIRONMENT=${params.ENVIRONMENT} ./python-app/"
+        //     }
+        // }
 
         stage('Execute Ansible Playbook') {
             steps {
