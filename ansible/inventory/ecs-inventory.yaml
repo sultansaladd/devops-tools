@@ -1,7 +1,17 @@
-[ecs_hosts]
-# Use tags to target instances
-ecs_tag_Name="MyEcsAppServer"
+[dev_eks]
 
-# OR use instance IDs
-# ec2-instance-id.example.com
-# ec2-instance-id2.example.com
+
+[uat_eks]
+<UAT_EKS_API_SERVER_ENDPOINT>
+
+[prod_eks]
+<PROD_EKS_API_SERVER_ENDPOINT>
+
+[dev:vars]
+eks_api_server=""
+
+[uat:vars]
+eks_api_server="<UAT_EKS_API_SERVER_ENDPOINT>"
+
+[prod:vars]
+eks_api_server="<PROD_EKS_API_SERVER_ENDPOINT>"
