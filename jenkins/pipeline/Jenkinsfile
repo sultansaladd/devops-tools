@@ -13,10 +13,9 @@ pipeline {
                 // Execute Ansible playbook with the selected environment
                 // sh 'ansible-playbook python-playbook.yml -e "environment=${params.ENVIRONMENT}"'
                 sh '''
-                    ansible --version
-                    ansible-playbook --version
-                    ansible-galaxy --version
-                    ansible-playbook python-playbook.yml -e "environment=${params.ENVIRONMENT}"
+                    ansible-playbook python-playbook.yml \
+                    -e "environment=${params.ENVIRONMENT}" \
+                    -e "ecr_image_url=${params.ECR_IMAGE_URL}"
                 '''
             }
         }
