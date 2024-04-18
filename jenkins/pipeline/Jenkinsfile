@@ -2,50 +2,17 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                git branch: 'master', credentialsId: 'your-github-credentials-id', url: 'https://github.com/your-username/your-repo.git'
+                git branch: 'main', credentialsId: 'github_creds', url: 'https://github.com/sultansaladd/devops-tools.git'
             }
         }
-        stage('Run Ansible Playbooks (Local)') {
+        stage('Deploy Nginx to GKE') {
             steps {
-                sh 'ansible-playbook local_dev_setup.yml' // Replace with your playbook name
-            }
-        }
-        stage('Build Docker Image (AWS CodeBuild)') {
-            steps {
-                // Configure AWS credentials for CodeBuild access
                 script {
-                    def credentials = com.amazonaws.auth.AWSCredentialsProvider.standard().credentials
-                    awsAccountId = credentials.getAccessKey()
-                    awsSecretKey = credentials.getSecretKey()
-                    sh """
-                    aws codebuild start-build 
-                        --project-name your-codebuild-project-name 
-                        --buildspec-location s3://your-bucket/buildspec.yml 
-                        --environment-variables "AWS_ACCOUNT_ID=$awsAccountId" 
-                        --environment-variables "AWS_SECRET_ACCESS_KEY=$awsSecretKey"
-                    """
-                }
-            }
-        }
-        stage('Deploy to ECS (AWS CodeDeploy)') {
-            steps {
-                // Configure AWS credentials for CodeDeploy access
-                script {
-                    def credentials = com.amazonaws.auth.AWSCredentialsProvider.standard().credentials
-                    awsAccountId = credentials.getAccessKey()
-                    awsSecretKey = credentials.getSecretKey()
-                    sh """
-                    aws deploy create-deployment 
-                        --application-name your-ecs-application-name 
-                        --deployment-group-name your-ecs-deployment-group-name 
-                        --revision-type LATEST 
-                        --s3-location bucket=your-bucket/key-prefix/ 
-                        --deployment-config-name CodeDeployDefault.yml 
-                        --environment-variables "AWS_ACCOUNT_ID=$awsAccountId" 
-                        --environment-variables "AWS_SECRET_ACCESS_KEY=$awsSecretKey"
-                    """
+                    // Assuming your kubectl config is available in a service account mounted as a secret
+                    sh 'source ~/.kube/config && kubectl config view' // usually in ~/.kube/config
+                    sh 'ansible-playbook ansible/playbook/nginx-gke.yml'
                 }
             }
         }
