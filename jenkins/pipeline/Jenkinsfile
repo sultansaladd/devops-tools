@@ -10,7 +10,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 // Execute Docker build command with the selected environment as build argument
-                sh "docker build -t python-app:${params.ENVIRONMENT} --build-arg ENVIRONMENT=${params.ENVIRONMENT} ./python-app/"
+                sh "sudo docker build -t python-app:${params.ENVIRONMENT} --build-arg ENVIRONMENT=${params.ENVIRONMENT} ./python-app/"
             }
         }
 
