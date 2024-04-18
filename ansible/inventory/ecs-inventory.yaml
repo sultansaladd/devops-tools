@@ -1,0 +1,7 @@
+[ecs_hosts]
+# Use tags to target instances
+ecs_tag_Name="MyEcsAppServer"
+
+# OR use instance IDs
+# ec2-instance-id.example.com
+# ec2-instance-id2.example.com
