@@ -1,1 +1,1 @@
-flask_image: 914760010790.dkr.ecr.ap-southeast-1.amazonaws.com/python-app:1
+python_image: 914760010790.dkr.ecr.ap-southeast-1.amazonaws.com/python-app:1

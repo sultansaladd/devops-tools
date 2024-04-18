@@ -1,2 +1,1 @@
-[uat]
-uat_ecs_host_ip ansible_user=your_ssh_username
+python_image: 914760010790.dkr.ecr.ap-southeast-1.amazonaws.com/python-app:1
