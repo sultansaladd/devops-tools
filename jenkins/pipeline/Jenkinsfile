@@ -4,17 +4,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', credentialsId: 'github_creds', url: 'https://github.com/sultansaladd/devops-tools.git'
+                git branch: 'main', credentialsId: 'repo_access', url: 'https://github.com/sultansaladd/devops-tools.git'
             }
         }
-        stage('Deploy Nginx to GKE') {
+        stage('Build Docker Images') {
             steps {
-                script {
-                    // Assuming your kubectl config is available in a service account mounted as a secret
-                    sh 'source ~/.kube/config && kubectl config view' // usually in ~/.kube/config
-                    sh 'ansible-playbook ansible/playbook/nginx-gke.yml'
-                }
+                // Execute Docker build command with the selected environment as build argument
+                sh "docker build -t python-app:${params.ENVIRONMENT} --build-arg ENVIRONMENT=${params.ENVIRONMENT} ./python-app/"
             }
         }
+
+        stage('Execute Ansible Playbook') {
+            steps {
+                // Execute Ansible playbook with the selected environment
+                sh 'ansible-playbook playbook.yml -e "environment=${params.ENVIRONMENT}"'
+            }
+        }
+    }
+    
+    // Parameters definition
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'uat', 'prod'], description: 'Select the environment')
     }
 }
