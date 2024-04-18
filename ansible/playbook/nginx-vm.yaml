@@ -1,0 +1,24 @@
+---
+- name: Setup Nginx
+  hosts: localhost
+  become: true  # Requires root privileges
+
+  tasks:
+    - name: Update package lists
+      apt: update_cache=yes
+
+    - name: Install Nginx
+      apt: name=nginx state=present
+
+    # - name: Copy Nginx configuration file
+    #   copy:
+    #     src: nginx.conf  # Replace with your config file path
+    #     dest: /etc/nginx/nginx.conf
+    #     owner: root
+    #     group: root
+    #     mode: 0644
+
+    - name: Reload Nginx service
+      service: name=nginx state=reloaded
+      # OR for systemd based systems:
+      # systemd: name=nginx state=reloaded

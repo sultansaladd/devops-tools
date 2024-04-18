@@ -1,0 +1,20 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', credentialsId: 'github_creds', url: 'https://github.com/sultansaladd/devops-tools.git'
+            }
+        }
+        stage('Deploy Nginx to GKE') {
+            steps {
+                script {
+                    // Assuming your kubectl config is available in a service account mounted as a secret
+                    sh 'source ~/.kube/config && kubectl config view' // usually in ~/.kube/config
+                    sh 'ansible-playbook ansible/playbook/nginx-gke.yml'
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,19 @@
+# tasks.yml (example for local development)
+- name: Install Python and virtualenv
+  hosts: localhost
+  become: true
+  tasks:
+    - name: Install Python using package manager (adjust based on your OS)
+      apt:
+        name: python3
+        state: present
+    - name: Install virtualenv
+      pip:
+        name: virtualenv
+        state: present
+
+- name: Create virtual environment for app
+  hosts: localhost
+  tasks:
+    - name: Create virtual environment
+      command: virtualenv venv
