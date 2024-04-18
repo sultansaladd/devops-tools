@@ -1,6 +1,6 @@
 ---
-- name: Deploy Nginx on ECS hosts
-  hosts: ecs_hosts
+- name: Setup Nginx
+  hosts: localhost
   become: true  # Requires root privileges
 
   tasks:
@@ -10,13 +10,13 @@
     - name: Install Nginx
       apt: name=nginx state=present
 
-    - name: Copy Nginx configuration file
-      copy:
-        src: nginx.conf  # Replace with your config file path
-        dest: /etc/nginx/nginx.conf
-        owner: root
-        group: root
-        mode: 0644
+    # - name: Copy Nginx configuration file
+    #   copy:
+    #     src: nginx.conf  # Replace with your config file path
+    #     dest: /etc/nginx/nginx.conf
+    #     owner: root
+    #     group: root
+    #     mode: 0644
 
     - name: Reload Nginx service
       service: name=nginx state=reloaded
